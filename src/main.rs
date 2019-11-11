@@ -1,3 +1,4 @@
+use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::{BufReader, Error};
@@ -33,11 +34,18 @@ fn process_line(line: &str) {
         end_address[3].to_string()
     );
 
-    println!("{},{}{}", startip, stopip, line.get(pos.unwrap()..line.len()).unwrap());
+    println!(
+        "{},{}{}",
+        startip,
+        stopip,
+        line.get(pos.unwrap()..line.len()).unwrap()
+    );
 }
 
 fn main() -> Result<(), Error> {
-    let path = "/home/anders/slask/GeoLite2-Country-CSV/GeoLite2-Country-Blocks-IPv4.csv";
+    let pwd = env::current_dir().expect("curr dir not found");
+    //println!("The current directory is {}", pwd.display());
+    let path = format!("{}/{}", pwd.display(), "GeoLite2-Country-Blocks-IPv4.csv");
     let input = File::open(path).expect("file not found");
     let buffered = BufReader::new(input);
     for (index, line) in buffered.lines().enumerate() {
